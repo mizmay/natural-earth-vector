@@ -7,7 +7,9 @@ setwd("~/Repos/natural-earth-vector/10m_cultural/")
 # Helper functions
 
 not.defined = function(x) {
-  is.null(x) || is.na(x) || is.nan(x) || x == ''
+  if (is.factor(x)) { x <- as.character(x) }
+  if (!grepl("\\D", x)) { x <- as.numeric(x) }
+  is.null(x) || is.na(x) || is.nan(x) || x == '' || x <= 0
 }
 
 get_locals <- function(wd_id, iso_codes) {
@@ -114,8 +116,8 @@ export_data_csv <- ne_10m_populated_places %>%
   select(wikidataid, LATITUDE, LONGITUDE) %>%
   right_join(export_data, by = "wikidataid")
 
-write_csv(export_data_csv, "ne_10m_populated_places_wikidata_updates", na="")
-write_csv(wikidata_results, "ne_names_issues_compare_wikidata", na="")
+write_csv(export_data_csv, "ne_10m_populated_places_wikidata_updates.csv", na="")
+write_csv(wikidata_results, "ne_names_issues_compare_wikidata.csv", na="")
 
 # Build a 
 # export_data_shapefile <- ne_10m_populated_places %>%
